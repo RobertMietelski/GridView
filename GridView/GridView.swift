@@ -830,10 +830,52 @@ extension GridView: AnimatedLayerDelegate {
 // MARK: - UIScrollViewDelegate
 extension GridView: UIScrollViewDelegate {
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if withoutScrollDelegation == false {
-            layoutIfNeeded()
-            originDelegate?.scrollViewDidScroll?(scrollView)
-        }
+        guard !withoutScrollDelegation else { return }
+        
+        layoutIfNeeded()
+        originDelegate?.scrollViewDidScroll?(scrollView)
+    }
+
+    public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        guard !withoutScrollDelegation else { return }
+        originDelegate?.scrollViewWillBeginDragging?(scrollView)
+    }
+
+    public func scrollViewWillEndDragging(_ scrollView: UIScrollView,
+                                          withVelocity velocity: CGPoint,
+                                          targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        guard !withoutScrollDelegation else { return }
+        originDelegate?.scrollViewWillEndDragging?(scrollView,
+                                                   withVelocity: velocity,
+                                                   targetContentOffset: targetContentOffset)
+    }
+
+    public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        guard !withoutScrollDelegation else { return }
+        originDelegate?.scrollViewDidEndDragging?(scrollView, willDecelerate: decelerate)
+    }
+
+    public func scrollViewWillBeginDecelerating(_ scrollView: UIScrollView) {
+        guard !withoutScrollDelegation else { return }
+        originDelegate?.scrollViewWillBeginDragging?(scrollView)
+    }
+
+    public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        guard !withoutScrollDelegation else { return }
+        originDelegate?.scrollViewDidEndDecelerating?(scrollView)
+    }
+    
+    public func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+        guard !withoutScrollDelegation else { return }
+        originDelegate?.scrollViewDidEndScrollingAnimation?(scrollView)
+    }
+
+    public func scrollViewShouldScrollToTop(_ scrollView: UIScrollView) -> Bool {
+        return originDelegate?.scrollViewShouldScrollToTop?(scrollView) ?? true
+    }
+
+    public func scrollViewDidScrollToTop(_ scrollView: UIScrollView) {
+        originDelegate?.scrollViewDidScrollToTop?(scrollView)
     }
 }
 
